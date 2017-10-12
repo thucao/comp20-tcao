@@ -1,0 +1,24 @@
+body {
+        font-family: "Palatino Linotype", "Book Antiqua", Palatino, serif;
+        background-color: #969696
+}
+
+#title {
+        text-align: center;
+        font-size: 50px;
+        font-weight: bold;
+        color: #8dc7d3;
+}
+
+#a_classic {
+        display: block;
+        text-align: center;
+        margin: auto;
+
+}
+
+#lyrics {
+        text-align: center;
+        font-size: 24px;
+        color: #ffffff;
+}

@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8" />
+<title>A Classic</title>
+<link rel="stylesheet" href="style.css" type="text/css" />
+</head>
+
+<body>
+
+<h1 id="title">A Classic</h1>
+
+<video src="https://www.cs.tufts.edu/comp/20/classic.mp4" id="a_classic" controls></video>
+<div id="lyrics"></div>
+
+<script>
+	// Complete this section and create a CSS file named style.css
+        var video = document.getElementById("a_classic");
+        var lyrics = document.getElementById("lyrics");
+        video.addEventListener("timeupdate", annotate, true);
+        function annotate () {
+                var t = video.currentTime;
+                if (t >= 8 && t < 13) {
+                        lyrics.innerHTML = "Children have You ever met the Bogeyman before";
+                }
+                else if ((t >= 13 && t < 17)) {
+                        lyrics.innerHTML = "No, of course You haven't for You're much too good, I'm sure;";
+                }
+                else if (t >= 17 && t < 21) {
+                        lyrics.innerHTML = "Don't You be afraid of him if he should visit You,";
+                }
+                else if (t >= 21 && t < 25) {
+                        lyrics.innerHTML = "He's a great big coward, so I'll tell You what to do";
+                }
+                else if ((t >= 25 && t < 29) || (t >= 57 && t < 60 || (t >= 111 && t < 115)) ) {
+                        lyrics.innerHTML = "Hush, hush, hush, here comes the Bogeyman,";
+                }
+                else if ((t >= 29 && t < 33) || (t >= 115 && t < 119)) {
+                        lyrics.innerHTML = "Don't let him come too close to You, he'll catch you if he can.";
+                }
+                else if (t >= 33 && t < 37) {
+                        lyrics.innerHTML = "Just pretend that you're a crocodile";
+                }
+                else if (t >= 37 && t < 41) {
+                        lyrics.innerHTML = "And you will find that Bogeyman will run away a mile.";
+                }
+                else if (t >= 41 && t < 45) {
+                        lyrics.innerHTML = "Say Shoo shoo and stick him with a pin";
+                }
+                else if (t >= 45 && t < 49) {
+                        lyrics.innerHTML = "Bogeyman will very nearly jump out of his skin";
+                }
+                else if (t >= 49 && t < 53) {
+                        lyrics.innerHTML = "Say buzz buzz just like the wasps that sting";
+                }
+                else if (t >= 53 && t < 57) {
+                        lyrics.innerHTML = "Bogeyman will think you are an elephant with wings";
+                }
+                else if (t >= 64 && t < 68) {
+                        lyrics.innerHTML = "Tell him you've got soldiers in your bed";
+                }
+                else if (t >= 68 && t < 72) {
+                        lyrics.innerHTML = "For he will never guess that they are only made of lead";
+                }
+                else if (t >= 80 && t < 84) {
+                        lyrics.innerHTML = "Say Hush hush, he'll think that you're asleep";
+                }
+                else if (t >= 84 && t < 88) {
+                        lyrics.innerHTML = "If you make a lovely snore away he'll softly creep";
+                }
+                else if (t >= 88 && t < 92) {
+                        lyrics.innerHTML = "Sing this tune you children one and all";
+                }
+                else if (t >= 92 && t < 96) {
+                        lyrics.innerHTML = "Bogeyman will run away, he'll think it's Henry Hall!";
+                }
+                else if (t >= 96 && t < 100) {
+                        lyrics.innerHTML = "When the shadows of the evening creep across the sky";
+                }
+                else if (t >= 100 && t < 104) {
+                        lyrics.innerHTML = "And your Mummy comes upstairs to sing a lullaby";
+                }
+                else if (t >= 104 && t < 108) {
+                        lyrics.innerHTML = "Tell her that the bogeyman no longer frightens you";
+                }
+                else if (t >= 108 && t < 111) {
+                        lyrics.innerHTML = "Uncle Henry's very kindly told you what to do";
+                }
+                else if (t >= 119 && t < 123) {
+                        lyrics.innerHTML = "Just pretend your teddy bear's a dog";
+                }
+                else if (t >= 123 && t < 127) {
+                        lyrics.innerHTML = "Then shout out, 'Fetch him, Teddy!' and he'll hop off like a frog.";
+                }
+                else if (t >= 135 && t < 139) {
+                        lyrics.innerHTML = "Say Meoow, pretend that you're a cat";
+                }
+                else if (t >= 139 && t < 143) {
+                        lyrics.innerHTML = "He'll think you may scratch him that make him fall down flat";
+                }
+                else if (t >= 143 && t < 147) {
+                        lyrics.innerHTML = "Just pretend he isn't really there";
+                }
+                else if (t >= 147 && t < 150) {
+                        lyrics.innerHTML = "You will find that Bogey man will vanish in thin air";
+                }
+                else if (t >= 158 && t < 162) {
+                        lyrics.innerHTML = "Here's one way to catch him without fail";
+                }
+                else if (t >= 162 && t < 164) {
+                        lyrics.innerHTML = "Just keep a little salt with you";
+                }
+                else if (t >= 164 && t < 167) {
+                        lyrics.innerHTML = "and put it on his tail";
+                }
+                else {
+                        lyrics.innerHTML = "";
+                }
+        }
+
+</script>
+</body>
+</html>
