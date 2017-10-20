@@ -17,26 +17,21 @@ var people;
 var landmarks;
 var closestLandmark;;
 
+// callback function when page loads
 function init()
 {
-	if (navigator.geolocation) { // the navigator.geolocation object is supported on your browser
-		navigator.geolocation.getCurrentPosition(function(position) {
-			myLat = position.coords.latitude;
-			myLng = position.coords.longitude;
-		});
-	}
 	map = new google.maps.Map(document.getElementById("map_canvas"), myOptions);
 	getMyLocation();
 }
 
+// Get my coordinates from navigator
 function getMyLocation() {
-	if (navigator.geolocation) { // the navigator.geolocation object is supported on your browser
+	if (navigator.geolocation) {
 		navigator.geolocation.getCurrentPosition(function(position) {
 			myLat = position.coords.latitude;
 			myLng = position.coords.longitude;
 			alert("Logged In: " + myLat + ", " + myLng);
 			renderMap();
-
 		});
 	}
 	else {
@@ -44,15 +39,12 @@ function getMyLocation() {
 	}
 }
 
+// Centers me on map
 function renderMap()
 {
 	me = new google.maps.LatLng(myLat, myLng);
-	// Update map and go there...
 	map.panTo(me);
-	// Create a marker
 	getData();
-	var title = "<b>Hello, it's me.</b><BR><BR><b>Closest Landmark: </b>" + closestLandmark.properties.Location_Name + "<BR><b>Distance: </b>" + new google.maps.LatLng(closestLandmark.geometry.coordinates[1] , closestLandmark.geometry.coordinates[0]) + " miles";
-	createMarker(me, "me.png", title);
 }
 
 // Gets data from herokuapp and posts my coords
@@ -67,17 +59,21 @@ function getData(){
 			createPeople();
 			createLandmarks();
 			renderPolyline();
+			var closestDist = calcDistance(me, (new google.maps.LatLng(closestLandmark.geometry.coordinates[1] , closestLandmark.geometry.coordinates[0])));
+			var title = "<b>Hello, it's me.</b><BR><BR><b>Closest Landmark: </b>" + closestLandmark.properties.Location_Name + "<BR><b>Distance: </b>" + closestDist + " miles";
+			createMarker(me, "me.png", title);
+		}
+		else {
+			createMarker(me, "me.png", "<b>Hello, it's me.</b><BR><BR><b>Closest Landmark: </b><BR><b>Distance</b>");
 		}
 	};
 	request.send("login=7UfrTBZr&lat=" + myLat + "&lng=" + myLng);
 }
 
+// Crreates a polyline from me to closest landmark
 function renderPolyline() {
-	console.log(closestLandmark.geometry.coordinates[1] + " " + closestLandmark.geometry.coordinates[0]);
-
 	var path = [ {lat: me.lat() , lng: me.lng()},
           	     {lat: closestLandmark.geometry.coordinates[1] , lng: closestLandmark.geometry.coordinates[0]} ];
-		     console.log("hello");
 
 	var closestLand = new google.maps.Polyline({
   		path: path,
@@ -90,6 +86,7 @@ function renderPolyline() {
 	closestLand.setMap(map);
 }
 
+// Creates a new marker
 function createMarker(loc, icon, title) {
 	marker = new google.maps.Marker({
 		position: loc,
@@ -126,7 +123,6 @@ function createLandmarks() {
 		var title = landmarks[i].properties.Details;
 		createMarker(loc, "landmark.png", title);
 		if (dist < smallDist) {
-			console.log(title);
 			closestLandmark = landmarks[i];
 			smallDist = dist;
 		}
