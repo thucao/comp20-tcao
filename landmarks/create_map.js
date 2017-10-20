@@ -12,7 +12,7 @@ var infowindow = new google.maps.InfoWindow();
 var data;
 var people;
 var landmarks;
-var closestLandmark;;
+var closestLandmark;
 
 // callback function when page loads
 function init()
