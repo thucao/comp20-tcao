@@ -8,9 +8,6 @@ var myOptions = {
 	mapTypeId: google.maps.MapTypeId.ROADMAP
 };
 var map;
-var me ; //Marker;
-// var landMarkers = {};
-// var peopleMarkers = {};
 var infowindow = new google.maps.InfoWindow();
 var data;
 var people;
@@ -72,6 +69,7 @@ function getData(){
 
 // Crreates a polyline from me to closest landmark
 function renderPolyline() {
+
 	var path = [ {lat: me.lat() , lng: me.lng()},
           	     {lat: closestLandmark.geometry.coordinates[1] , lng: closestLandmark.geometry.coordinates[0]} ];
 
@@ -82,12 +80,12 @@ function renderPolyline() {
   		strokeOpacity: 1.0,
   		strokeWeight: 2
 	});
-
 	closestLand.setMap(map);
 }
 
 // Creates a new marker
 function createMarker(loc, icon, title) {
+
 	marker = new google.maps.Marker({
 		position: loc,
 		title: title,
@@ -100,11 +98,11 @@ function createMarker(loc, icon, title) {
 		infowindow.setContent(this.title);
 		infowindow.open(map, this);
 	});
-
 }
 
 // Create markers for people logged in onto herokuapp
 function createPeople() {
+
 	for (i = 0; i < people.length; i++) {
 		var loc = new google.maps.LatLng(people[i].lat, people[i].lng);
 		var login = people[i].login;
@@ -116,6 +114,7 @@ function createPeople() {
 
 // Create markers for all landmarks within one mile of me
 function createLandmarks() {
+
 	var smallDist = 1;
 	for (i = 0; i < landmarks.length; i++) {
 		var loc = new google.maps.LatLng(landmarks[i].geometry.coordinates[1],landmarks[i].geometry.coordinates[0]);
@@ -131,7 +130,6 @@ function createLandmarks() {
 
 // Returns the distance between two points in miles
 function calcDistance(myLoc, otherLoc) {
-
 
 	var dLat = (myLoc.lat() - otherLoc.lat()) * Math.PI / 180;
 	var dLon = (myLoc.lng() - otherLoc.lng()) * Math.PI / 180;
