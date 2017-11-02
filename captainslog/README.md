@@ -1,4 +1,4 @@
-#Captain's Log#
+#Captains Log#
 
 README
 
