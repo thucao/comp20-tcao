@@ -46,7 +46,7 @@ function renderMap()
 
 // Gets data from herokuapp and posts my coords
 function getData(){
-	request.open("POST", "https://defense-in-derpth.herokuapp.com/sendLocation", true);
+	request.open("POST", "https://floating-river-70442.herokuapp.com/sendLocation", true);
 	request.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
 	request.onreadystatechange = function() {//Call a function when the state changes.
 		if(request.readyState == 4 && request.status == 200) {
