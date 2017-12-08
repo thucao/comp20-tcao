@@ -1,0 +1,108 @@
+<!DOCTYPE HTML>
+
+<html>
+
+<head>
+        <title>Security</title>
+        <link rel="stylesheet" href="security.css"/>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
+</head>
+
+<body>
+
+        <div class = "back">
+        <h1>
+                Client: Martin Gao<br />
+                Consultant: Thu Cao<br />
+                Server: <a href = "https://landmarks-server.herokuapp.com">Landmarks Sever</a>
+        </h1>
+
+        <div class = "res">
+        <h2> INTRODUCTION </h2>
+        <p>
+                I was hired as a security consultant to document and resolve the security and privacy issues in the client's applications pertaining to the Landmarks server.
+        </p>
+        <h2> METHODOLOGY </h2>
+        <p>
+                First I loaded the homepage to view what the app initially looks like, then I performed black box testing, followed by white box testing.
+                <br /><br />Then I used Postman, a tool to GET and POST to a specific server, post method to post a valid login, lat, and lng without any intent to break the application. Thus, viewing the homepage again should show my new post. Afterwards, I posted three more times, to try and break each of the input – login, lat, lng. For each, I used html encoding to load a webpage.
+                <br /><br /><span class = "code">&lt;iframe src= https://omfgdogs.com/ width="100%" height="100%" border="0"&gt;&lt;/iframe &gt;</span>
+                <br /><br />After attempting each, I reloaded the page to see if the webpage loaded, if it did, then the specific parameter has security flaw. After testing the POST parameters, I tested the GET parameters using Postman again. I tested the query for /checkins.json for normal login strings with no special characters, either in the database or not in the database. The return .json file should either contain a [] or the checkins for the specific login. I then tested the login query with operators such as $gt and $ne that compared the login strings in the database to the to the query.<br />
+                <br /><br /><span class = "code">https://landmarks-server.herokuapp.com/checkins.json?login[$gt]</span>
+                <br /><br />After testing the parameters, I examined the client’s code to see if there were any other places where the issues I found through black box testing occurred. Then I examined if there were any authentication, hidden fields, and places where my client could potentially leak more information than necessary.
+        </p>
+        <h2> ABSTRACT OF FINDINGS </h2>
+        <p>
+                Many of the security and privacy issues stem from user’s input, when they are searching for something and when they are sending data. When sending data, the user can input their own login, and a legitimate latitude and longitude. However, this input contains security issues because the user can put in code as the login, and thus could change the layout of the webpage, presenting fraudulent web content, steal data, send false data, load dangerous malware and many more. In addition, when the user queries for a certain data, they were able to retrieve the whole database, through certain inputs. Moreover, the application provided a blatant way for users to get the database just by putting the correct link.
+        </p>
+        <h2> SECURITY AND PRIVACY ISSUES </h2>
+        <p>
+                <span class = "label">Issue:</span> 		&emsp;Cross-site Scripting<br />
+                <span class = "label">Location:</span> 	&emsp;/sendLocation – login parameter – POST METHOD<br />
+                <span class = "label">Severity:</span>	&emsp;HIGH – users are able to write scripts and html to present all users with fraudulent web content, steal database information, load malware content, send annoying messages, hide information, and change the layout of the page. Basically, this allows the user to do whatever they want with the application, which makes this issue highly dangerous<br />
+                <span class = "label">Description:</span>	&emsp;Issue was found through black box testing of POST parameters of sendLocation. Users are able to write whatever they want for the POST login parameter since there is no validation for the login input. Thus, they can write a scripts/html to do as they please with the webpage.<br />
+                <span class = "label">Resolution:</span>	&emsp;Validate inputs by removing special characters, especially angle brackets<br />
+                <span class = "code">theLogin = req.body.login.replace(/[^\w\s]/gi, '');</span><br />
+                <span class = "label">Proof:</span> <br /><br />
+                <img src="postman.png" alt="postman" /><br />
+                Using Postman to send parameters <br /><br />
+                <img src="xss.png" alt="xss" /><br />
+                Login = <span class = "code">&lt;script> alert(XSS);&lt;/script></span><br /><br /><br />
+                <img src="style.png" alt="style changed" /><br />
+                Login = <span class = "code">&lt;style> body{background-image: url("https://pbs.twimg.com/media/CLvKJFsUkAA4ETg.jpg");}&lt;/style></span><br /><br /><br />
+                <img src="html.png" alt="html added" /><br />
+                Login = <span class = "code">&lt;iframe src= https://omfgdogs.com/ width="100%" height="100%" border="0"&gt;&lt;/iframe &gt;</span><br /><br />
+
+
+
+
+
+
+
+                <span class = "label">Issue:</span> 		&emsp;Database Injection<br />
+                <span class = "label">Location:</span>	&emsp;/checkins.json – login query – GET METHOD<br />
+                <span class = "label">Severity:</span>	&emsp;HIGH – users are able to retrieve the entire database which may contain information that the admin was hiding. In the client’s work, it’s a huge privacy issue since it allows other users to have data on every input’s location, even inputs that they did not know of. In general, if the database contains valuable information such as usernames/passwords, this flaw will be extremely vulnerable as it gives the user access to all the accounts on the server, even potentially the admin’s.<br />
+                <span class = "label">Description:</span>	&emsp;Issue was found through testing of GET login query. Users are able to input compare operators to empty strings such as $ne (not equal) or $gt (greater than) so that any login that is not equal to an empty string or that is longer than an empty string gets returned, that is, essentially the whole database as you cannot put in an empty login.<br />
+                <span class = "code">https://landmarks-server.herokuapp.com/checkins.json?=login[$gt]</span><br />
+                <span class = "label">Resolution:</span>	&emsp;Sanitize the query string by adding a new dependency – “mongo-sanitize” – and using the sanitize function to clean query injections<br />
+                <span class = "code">var sanitize = require('mongo-sanitize');</span><br />
+                <span class = "code">theLogin = sanitize(req.query.login);</span><br />
+                <span class = "label">Proof:</span><br /><br />
+                <img src="injection.png" alt="injection" /><br /><br />
+
+
+                <span class = "label">Issue:</span>		&emsp;Bad Programming Practice<br />
+                <span class = "label">Location:</span>	&emsp;/allcheckins.json – GET METHOD<br />
+                <span class = "label">Severity:</span>	&emsp;MEDIUM – similar to the database injection, this method allows users to retrieve the whole database if they know the url. This is medium because it can easily be fixed, and users may not be able to obtain the url if the script is encoded/private. However, it can be high severity if this url is public, where anyone can access the whole database.<br />
+                <span class = "label">Description:</span>	&emsp;Issue was found by examining client’s code. Users are able to retrieve the json file for the whole database if they put ~/allcheckins.json in the address bar.<br />
+                <span class = "label">Resolution:</span>	&emsp;Remove this get function entirely. Users will not have access to the entire database if there’s no get function for it.<br />
+                <span class = "label">Proof:</span><br /><br />
+                <img src="allcheckins.png" alt="all checkins" />
+        </p>
+
+
+        <h2> CONCLUSION </h2>
+        <p>
+                Overall, security flaws through post input and query can be fixed by validating and sanitizing the input. <br />
+                Future recommendations:<br />
+                Client may add in authentication methods to prevent bots from spamming the database, however, they must be careful to not allow users to be able to retrieve data regarding authentication.
+                Client may also use hashing encode user login and storing the encoded logins, being careful about which hashing function they use. This may cause the program to run slower since it will have to encode and then decode.
+
+        </p>
+
+        <h2> REFERENCES </h2>
+        <p>
+                <a href = "https://zanon.io/posts/nosql-injection-in-mongodb">NoSQL Injection in Mongodb</a><br />
+                <a href = "https://blog.websecurify.com/2014/08/hacking-nodejs-and-mongodb.html">Hacking Nodejs and Mongodb</a><br />
+                <a href = "https://tuftsdev.github.io/WebProgramming/notes/web_security.html">Web Security Notes</a><br />
+                <a href = "https://github.com/tuftsdev/WebProgramming/blob/gh-pages/examples/nodejs/nodemongoapp/server.js">Node Mongo App Example</a><br />
+                <a href = "https://www.getpostman.com/">Postman</a>
+
+        </p>
+        </div>
+        </div>
+
+
+</body>
+</html>
